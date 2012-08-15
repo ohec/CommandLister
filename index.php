@@ -4,6 +4,21 @@ $path_arr = explode(PATH_SEPARATOR, $path);
 // print_r($path_arr);
 $path_arr = array_unique(trim_path_array($path_arr));
 
+
+/* Ignore some paths */
+$ignore = json_decode(file_get_contents('ignore.json'), true);
+$arr = array();
+foreach($path_arr as $line) {
+	if(!in_array($line, $ignore['ignore'])) {
+		$arr[] = $line;
+	}
+}
+$path_arr = $arr;
+
+//file_put_contents('ignore.json', json_encode(array('ignore' => $path_arr) ));
+
+
+
 $command_arr = array();
 foreach($path_arr as $path) {
 	$files = glob($path . DIRECTORY_SEPARATOR . '{*.exe,*.bat,*.cmd,*.sh,*.php}', GLOB_BRACE);
